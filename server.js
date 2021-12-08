@@ -4,9 +4,10 @@ const express = require('express');
 const { animals } = require('./data/animals');
 
 const PORT = process.env.PORT || 3001;
-
 const app = express();
 
+// need this middleware function to access front end code
+app.use(express.static('public'));
 // need both middleware functions(below) to be set up everytime you create a server that is looking to accept POST data.
 // parse incoming string to array data
 app.use(express.urlencoded({ extended: true }));
@@ -116,6 +117,24 @@ app.post('/api/animals', (req, res) => {
     }
 
 
+});
+
+// order of routes matter. The wild card route shoulkd always come last
+// home page route
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
+});
+// animal page route
+app.get('/animals', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+// zookeeper page route
+app.get('/zookeepers', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+});
+// wild card route
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.listen(PORT, () => {
